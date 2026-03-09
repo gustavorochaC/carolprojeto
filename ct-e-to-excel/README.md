@@ -1,73 +1,72 @@
-# Welcome to your Lovable project
+# CT-e Extractor
 
-## Project info
+Aplicação web para extração automática de dados de CT-es (Conhecimento de Transporte Eletrônico) em PDF e exportação para Excel. Desenvolvida para uso interno, com processamento 100% local — nenhum dado sai da máquina.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Funcionalidades
 
-## How can I edit this code?
+- **Upload em lote** — processe vários CT-es de uma vez, com barra de progresso e status por arquivo
+- **Extração automática** — extrai dados via PDF.js (nativo) com fallback para OCR (Tesseract.js) quando necessário
+- **Deduplicação** — detecta automaticamente CT-es duplicados pela chave de acesso (44 dígitos)
+- **Preview e edição** — visualize os dados extraídos em tabela editável antes de exportar
+- **Exportação Excel** — gera `.xlsx` com colunas na ordem correta e formatação monetária
+- **Histórico por mês** — navegue pelos CT-es processados em meses anteriores
+- **Relatório de qualidade** — identifica campos críticos ausentes (❌ Crítico / ⚠️ Parcial / ✅ Completo)
+- **Tema escuro** — suporte nativo a dark mode
 
-There are several ways of editing your application.
+## Campos extraídos
 
-**Use Lovable**
+| Coluna | Descrição |
+|---|---|
+| Data | Data de emissão (DD/MM/YYYY) |
+| Numero_CTE | Número do CT-e |
+| Transportadora | Tomador do serviço |
+| Origem | Remetente |
+| Cliente | Destinatário |
+| Localidade | Município do destinatário |
+| UF | Estado do destinatário |
+| Placas_Veiculo | Placa(s) do veículo (Modal Rodoviário) |
+| Condicao | Sempre `Venda` |
+| Nota_Fiscal | Série/Nº do documento |
+| Valor_NF | Valor total da carga |
+| Valor_Frete | Valor do frete (componente) |
+| Valor_Seguro | Calculado: `Valor_NF × 0,0005` |
+| Pedagio | Manual (editável, padrão 0) |
+| Frete_Total | Total da prestação do serviço |
+| Frete_c_ICMS | Valor total da prestação do serviço |
+| Cobranca_CTE | Valor a receber |
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Como rodar
 
-Changes made via Lovable will be committed automatically to this repo.
+### Pré-requisitos
 
-**Use your preferred IDE**
+- [Node.js](https://nodejs.org/) 18 ou superior
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Instalação
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+git clone https://github.com/gustavorochaC/carolprojeto
+cd carolprojeto/ct-e-to-excel
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+A aplicação ficará disponível em `http://localhost:8080`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Build de produção
 
-**Use GitHub Codespaces**
+```bash
+npm run build
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+O build é gerado na pasta `docs/`.
 
-## What technologies are used for this project?
+## Tecnologias
 
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [PDF.js](https://mozilla.github.io/pdf.js/) — extração nativa de texto
+- [Tesseract.js](https://tesseract.projectnaptha.com/) — OCR de fallback
+- [SheetJS (xlsx)](https://sheetjs.com/) — geração de Excel
+- IndexedDB — persistência local dos dados
