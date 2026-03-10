@@ -127,20 +127,20 @@ export default {
       },
       fontFamily: {
         sans: [
-          'IBM Plex Sans',
+          'Satoshi',
           'ui-sans-serif',
           'system-ui',
           '-apple-system',
           'sans-serif'
         ],
         display: [
-          'Barlow Condensed',
+          'Satoshi',
           'ui-sans-serif',
           'system-ui',
           'sans-serif'
         ],
         mono: [
-          'IBM Plex Mono',
+          'Satoshi',
           'ui-monospace',
           'SFMono-Regular',
           'Menlo',
