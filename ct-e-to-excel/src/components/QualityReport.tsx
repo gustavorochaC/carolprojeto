@@ -1,18 +1,14 @@
 import { CheckCircle2, AlertTriangle, XCircle, Edit2 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import type { CTeData } from '@/lib/pdfExtractor';
 import { EXCEL_COLUMN_LABELS, type ExcelColumnKey } from '@/lib/types';
 
-// Fields considered critical — if any are missing the CT-e is flagged as ❌
 const CRITICAL_EXCEL_FIELDS: ExcelColumnKey[] = [
   'Numero_CTE',
   'Cliente',
   'Cobranca_CTE',
 ];
 
-// Fields considered important but not critical — flag as ⚠️
 const IMPORTANT_FIELDS: ExcelColumnKey[] = [
   'Data',
   'Transportadora',
@@ -51,10 +47,10 @@ const analyzeRow = (cte: CTeData): ReportRow => {
     if (col === 'Placas_Veiculo') return cte.Placas_Veiculo || cte.Placa_Veiculo;
     if (col === 'Nota_Fiscal') return cte.Nota_Fiscal || cte.NF_Referencia;
     if (col === 'Frete_Total') return cte.Frete_Total || cte.Frete;
-    if (col === 'Valor_Seguro') return (cte.Valor_NF || 0) * 0.0005; // always computed, never missing
-    if (col === 'Pedagio') return undefined; // always manual, skip
-    if (col === 'Frete_c_ICMS') return undefined; // computed, skip
-    if (col === 'Condicao') return undefined; // always 'Venda', skip
+    if (col === 'Valor_Seguro') return (cte.Valor_NF || 0) * 0.0005;
+    if (col === 'Pedagio') return undefined;
+    if (col === 'Frete_c_ICMS') return undefined;
+    if (col === 'Condicao') return undefined;
     return (cte as Record<string, unknown>)[col];
   };
 
@@ -77,34 +73,29 @@ const analyzeRow = (cte: CTeData): ReportRow => {
   return { cte, status, issues };
 };
 
-const StatusBadge = ({ status }: { status: RowStatus }) => {
-  if (status === 'complete') {
-    return (
-      <Badge className="gap-1 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 border-0">
-        <CheckCircle2 className="w-3 h-3" />
-        Completo
-      </Badge>
-    );
-  }
-  if (status === 'partial') {
-    return (
-      <Badge className="gap-1 bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400 border-0">
-        <AlertTriangle className="w-3 h-3" />
-        Parcial
-      </Badge>
-    );
-  }
-  return (
-    <Badge className="gap-1 bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400 border-0">
-      <XCircle className="w-3 h-3" />
-      Crítico
-    </Badge>
-  );
+const statusConfig = {
+  complete: {
+    icon: CheckCircle2,
+    label: 'OK',
+    row: 'border-emerald-500/20 bg-emerald-500/5',
+    badge: 'text-emerald-700 dark:text-emerald-400 border-emerald-500/25 bg-emerald-500/10',
+  },
+  partial: {
+    icon: AlertTriangle,
+    label: 'PARCIAL',
+    row: 'border-amber-500/20 bg-amber-500/5',
+    badge: 'text-amber-700 dark:text-amber-400 border-amber-500/30 bg-amber-500/10',
+  },
+  critical: {
+    icon: XCircle,
+    label: 'CRÍTICO',
+    row: 'border-red-500/20 bg-red-500/5',
+    badge: 'text-red-700 dark:text-red-400 border-red-500/25 bg-red-500/10',
+  },
 };
 
 interface QualityReportProps {
   data: CTeData[];
-  /** Called when user clicks "Editar" on a field — scroll/focus that column in ExcelPreview */
   onEditField?: (chaveAcesso: string, column: ExcelColumnKey) => void;
 }
 
@@ -117,92 +108,123 @@ const QualityReport = ({ data, onEditField }: QualityReportProps) => {
   const critical = rows.filter(r => r.status === 'critical').length;
 
   return (
-    <Card className="border-none shadow-sm bg-card/50 backdrop-blur-sm">
-      <CardHeader className="pb-4 border-b border-border/50">
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <CardTitle className="flex items-center gap-2 text-lg font-medium">
-            <CheckCircle2 className="w-5 h-5 text-primary" />
+    <div className="rounded-lg border border-border bg-card overflow-hidden">
+      {/* Header */}
+      <div className="px-5 py-3.5 border-b border-border bg-muted/20 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="font-display font-600 text-base tracking-wide text-foreground">
             Relatório de Qualidade
-          </CardTitle>
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-full">
-              <CheckCircle2 className="w-3 h-3" />
-              {complete} completo(s)
-            </span>
-            {partial > 0 && (
-              <span className="flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-2 py-1 rounded-full">
-                <AlertTriangle className="w-3 h-3" />
-                {partial} parcial(is)
-              </span>
-            )}
-            {critical > 0 && (
-              <span className="flex items-center gap-1.5 text-xs text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 px-2 py-1 rounded-full">
-                <XCircle className="w-3 h-3" />
-                {critical} crítico(s)
-              </span>
-            )}
-          </div>
+          </p>
+          <p className="font-mono text-[11px] text-muted-foreground">{data.length} CT-e(s) analisados</p>
         </div>
-      </CardHeader>
-      <CardContent className="pt-4">
-        <div className="space-y-2">
-          {rows.map((row, idx) => (
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className={cn(
+            "inline-flex items-center gap-1 font-mono text-[11px] border rounded px-2 py-1",
+            statusConfig.complete.badge
+          )}>
+            <CheckCircle2 className="w-3 h-3" />
+            {complete} OK
+          </span>
+          {partial > 0 && (
+            <span className={cn(
+              "inline-flex items-center gap-1 font-mono text-[11px] border rounded px-2 py-1",
+              statusConfig.partial.badge
+            )}>
+              <AlertTriangle className="w-3 h-3" />
+              {partial} parcial
+            </span>
+          )}
+          {critical > 0 && (
+            <span className={cn(
+              "inline-flex items-center gap-1 font-mono text-[11px] border rounded px-2 py-1",
+              statusConfig.critical.badge
+            )}>
+              <XCircle className="w-3 h-3" />
+              {critical} crítico
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Rows */}
+      <div className="divide-y divide-border/40 p-4 space-y-2">
+        {rows.map((row, idx) => {
+          const cfg = statusConfig[row.status];
+          const Icon = cfg.icon;
+
+          return (
             <div
               key={row.cte.chaveAcesso || idx}
-              className={`rounded-lg border px-4 py-3 flex flex-col sm:flex-row sm:items-start gap-3 transition-colors ${
-                row.status === 'complete'
-                  ? 'border-emerald-200/60 dark:border-emerald-900/40 bg-emerald-50/30 dark:bg-emerald-950/20'
-                  : row.status === 'critical'
-                  ? 'border-red-200/60 dark:border-red-900/40 bg-red-50/30 dark:bg-red-950/20'
-                  : 'border-amber-200/60 dark:border-amber-900/40 bg-amber-50/30 dark:bg-amber-950/20'
-              }`}
+              className={cn(
+                "rounded border px-4 py-3 flex flex-col sm:flex-row sm:items-start gap-3",
+                cfg.row
+              )}
             >
-              {/* CT-e identifier */}
-              <div className="flex items-center gap-3 min-w-[180px]">
-                <StatusBadge status={row.status} />
-                <span className="font-mono text-xs bg-muted px-2 py-0.5 rounded text-foreground/70">
+              {/* Status + CTE number */}
+              <div className="flex items-center gap-2 shrink-0">
+                <span className={cn(
+                  "inline-flex items-center gap-1 font-mono text-[10px] border rounded px-1.5 py-0.5",
+                  cfg.badge
+                )}>
+                  <Icon className="w-2.5 h-2.5" />
+                  {cfg.label}
+                </span>
+                <span className="font-mono text-xs text-muted-foreground bg-muted/60 px-2 py-0.5 rounded">
                   {row.cte.Numero_CTe || '—'}
                 </span>
               </div>
 
-              {/* Issues list */}
+              {/* Issues */}
               {row.issues.length === 0 ? (
-                <span className="text-xs text-muted-foreground italic">Todos os campos preenchidos</span>
+                <span className="font-mono text-[11px] text-muted-foreground">
+                  Todos os campos preenchidos
+                </span>
               ) : (
                 <div className="flex flex-wrap gap-1.5 flex-1">
                   {row.issues.map(issue => (
                     <button
                       key={issue.column}
                       onClick={() => onEditField?.(row.cte.chaveAcesso, issue.column)}
-                      className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border transition-colors cursor-pointer hover:opacity-80 ${
+                      title={`Editar ${issue.label}`}
+                      className={cn(
+                        "inline-flex items-center gap-1 font-mono text-[11px] px-2 py-0.5 rounded border",
+                        "transition-opacity hover:opacity-70 cursor-pointer",
                         issue.critical
-                          ? 'bg-red-100 dark:bg-red-900/30 border-red-300 dark:border-red-800 text-red-700 dark:text-red-400'
-                          : 'bg-amber-100 dark:bg-amber-900/30 border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-400'
-                      }`}
-                      title={`Clique para editar ${issue.label}`}
+                          ? "text-red-700 dark:text-red-400 border-red-400/30 bg-red-500/10"
+                          : "text-amber-700 dark:text-amber-400 border-amber-400/30 bg-amber-500/10"
+                      )}
                     >
-                      {issue.critical ? <XCircle className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
+                      {issue.critical
+                        ? <XCircle className="w-2.5 h-2.5" />
+                        : <AlertTriangle className="w-2.5 h-2.5" />
+                      }
                       {issue.label}
-                      {onEditField && <Edit2 className="w-2.5 h-2.5 ml-0.5 opacity-60" />}
+                      {onEditField && <Edit2 className="w-2 h-2 opacity-50 ml-0.5" />}
                     </button>
                   ))}
                 </div>
               )}
 
-              {/* Client name */}
+              {/* Client */}
               {row.cte.Cliente && (
-                <span className="text-xs text-muted-foreground sm:ml-auto shrink-0 truncate max-w-[200px]" title={row.cte.Cliente}>
+                <span
+                  className="font-mono text-[11px] text-muted-foreground sm:ml-auto shrink-0 truncate max-w-[200px]"
+                  title={row.cte.Cliente}
+                >
                   {row.cte.Cliente}
                 </span>
               )}
             </div>
-          ))}
-        </div>
-        <p className="mt-3 text-xs text-muted-foreground">
-          Clique em um campo com problema para editar diretamente na tabela acima.
+          );
+        })}
+      </div>
+
+      <div className="px-5 pb-3">
+        <p className="font-mono text-[11px] text-muted-foreground/60">
+          Clique em um campo para editar na tabela acima.
         </p>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

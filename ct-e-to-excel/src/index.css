@@ -1,93 +1,112 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* ============================================================
+   CT-e Extractor — Design System
+   Paleta: Industrial/Utilitário — zinc profundo + âmbar queimado
+   Tipografia: Barlow Condensed (display) + IBM Plex Sans (body)
+   ============================================================ */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Backgrounds */
+    --background: 220 14% 96%;
+    --foreground: 220 13% 9%;
 
+    /* Cards */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 13% 9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 220 13% 9%;
 
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
+    /* Primário: âmbar queimado */
+    --primary: 38 90% 46%;
+    --primary-foreground: 30 20% 8%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secundário: zinc suave */
+    --secondary: 220 10% 90%;
+    --secondary-foreground: 220 13% 20%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted */
+    --muted: 220 10% 93%;
+    --muted-foreground: 220 8% 46%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent */
+    --accent: 38 90% 46%;
+    --accent-foreground: 30 20% 8%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Destructive */
+    --destructive: 4 72% 52%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    /* Borders */
+    --border: 220 12% 84%;
+    --input: 220 12% 84%;
+    --ring: 38 90% 46%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar */
+    --sidebar-background: 220 15% 98%;
+    --sidebar-foreground: 220 10% 30%;
+    --sidebar-primary: 38 90% 46%;
+    --sidebar-primary-foreground: 30 20% 8%;
+    --sidebar-accent: 220 10% 93%;
+    --sidebar-accent-foreground: 220 13% 20%;
+    --sidebar-border: 220 12% 88%;
+    --sidebar-ring: 38 90% 46%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Backgrounds — zinc profundo */
+    --background: 220 14% 7%;
+    --foreground: 220 9% 88%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    /* Cards */
+    --card: 220 13% 10%;
+    --card-foreground: 220 9% 88%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 13% 10%;
+    --popover-foreground: 220 9% 88%;
 
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Primário: âmbar mais quente no escuro */
+    --primary: 38 92% 52%;
+    --primary-foreground: 30 20% 6%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* Secundário */
+    --secondary: 220 11% 17%;
+    --secondary-foreground: 220 9% 75%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    /* Muted */
+    --muted: 220 11% 14%;
+    --muted-foreground: 220 8% 52%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Accent */
+    --accent: 38 92% 52%;
+    --accent-foreground: 30 20% 6%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    /* Destructive */
+    --destructive: 4 65% 48%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    /* Borders */
+    --border: 220 11% 18%;
+    --input: 220 11% 18%;
+    --ring: 38 92% 52%;
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar — mais escura que o background */
+    --sidebar-background: 220 15% 5%;
+    --sidebar-foreground: 220 9% 70%;
+    --sidebar-primary: 38 92% 52%;
+    --sidebar-primary-foreground: 30 20% 6%;
+    --sidebar-accent: 220 11% 12%;
+    --sidebar-accent-foreground: 220 9% 80%;
+    --sidebar-border: 220 11% 12%;
+    --sidebar-ring: 38 92% 52%;
   }
 }
 
@@ -96,55 +115,132 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    font-size: 15px;
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-feature-settings: "kern" 1, "liga" 1;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.01em;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'IBM Plex Mono', monospace;
   }
 }
 
-/* Custom scrollbar */
+/* ============================================================
+   Scrollbar customizada
+   ============================================================ */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-muted/30;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/30 rounded-full;
+  @apply bg-border rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-muted-foreground/50;
+  @apply bg-muted-foreground/40;
 }
 
-/* Gradient text utility */
+/* ============================================================
+   Utilitários de design
+   ============================================================ */
+
+/* Texto com gradiente âmbar */
 .gradient-text {
-  @apply bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent;
+  background: linear-gradient(135deg, hsl(38 92% 52%) 0%, hsl(22 90% 52%) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Glass effect */
+/* Efeito glass */
 .glass {
-  @apply bg-background/80 backdrop-blur-lg border border-border/50;
+  @apply bg-card/80 backdrop-blur-lg border border-border/50;
 }
 
-/* Card hover effect */
+/* Card hover — sombra âmbar sutil */
 .card-hover {
-  @apply transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5;
+  @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-px;
 }
 
-/* Button press effect */
+/* Pressionar botão */
 .btn-press {
-  @apply active:scale-[0.98] transition-transform duration-150;
+  @apply active:scale-[0.97] transition-transform duration-100;
 }
 
-/* Focus ring effect */
+/* Focus ring */
 .focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
+  @apply focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 focus:ring-offset-background;
 }
 
-/* Table row hover effect */
+/* Table row hover */
 .table-row-hover {
-  @apply transition-colors duration-150 hover:bg-muted/50;
+  @apply transition-colors duration-100 hover:bg-muted/60;
+}
+
+/* Tag industrial — usado em badges de status */
+.tag-amber {
+  @apply bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/25 font-mono text-xs font-medium;
+}
+
+.tag-success {
+  @apply bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 font-mono text-xs font-medium;
+}
+
+.tag-error {
+  @apply bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/20 font-mono text-xs font-medium;
+}
+
+/* Linha decorativa âmbar */
+.accent-line {
+  @apply border-l-2 border-primary pl-3;
+}
+
+/* Padrão de grid sutil no fundo (industrial) */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, hsl(var(--border) / 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(var(--border) / 0.4) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Pulsação de status online */
+@keyframes pulse-amber {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.pulse-amber {
+  animation: pulse-amber 2s ease-in-out infinite;
+}
+
+/* Animação de entrada suave */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fade-up 0.3s ease-out forwards;
 }

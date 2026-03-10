@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import { cn } from "@/lib/utils";
 
 const Layout = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -16,16 +15,18 @@ const Layout = () => {
   }, [darkMode]);
 
   return (
-    <div className="min-h-screen flex bg-background font-sans transition-colors duration-300">
-      <Sidebar 
-        darkMode={darkMode} 
+    <div className="min-h-screen flex bg-background transition-colors duration-300">
+      <Sidebar
+        darkMode={darkMode}
         onToggleDarkMode={() => setDarkMode(!darkMode)}
         collapsed={sidebarCollapsed}
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
-      
-      <main className="flex-1 p-8 overflow-y-auto h-screen">
-        <Outlet />
+
+      <main className="flex-1 overflow-y-auto h-screen">
+        <div className="max-w-6xl mx-auto px-8 py-8 space-y-8">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

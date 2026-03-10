@@ -6,11 +6,11 @@ interface ErrorMessageProps {
 
 const ErrorMessage = ({ message }: ErrorMessageProps) => {
   return (
-    <div className="border-2 border-destructive bg-destructive/10 p-4 flex items-start gap-3">
-      <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+    <div className="rounded border border-red-500/30 bg-red-500/10 px-4 py-3 flex items-start gap-3">
+      <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
       <div>
-        <p className="font-bold text-destructive">Erro</p>
-        <p className="text-sm text-foreground">{message}</p>
+        <p className="font-mono text-[11px] text-red-700 dark:text-red-400 uppercase tracking-widest mb-0.5">Erro</p>
+        <p className="text-sm text-foreground/80">{message}</p>
       </div>
     </div>
   );

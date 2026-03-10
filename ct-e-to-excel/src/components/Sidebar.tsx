@@ -1,7 +1,6 @@
-import { FileText, Moon, Sun, ChevronLeft, ChevronRight, LayoutDashboard, FileSpreadsheet, Sparkles } from 'lucide-react';
+import { FileText, Moon, Sun, ChevronLeft, ChevronRight, LayoutDashboard, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
@@ -19,106 +18,120 @@ const Sidebar = ({ darkMode, onToggleDarkMode, collapsed, onToggleCollapse }: Si
 
   const navItems = [
     { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/history', label: 'Histórico', icon: FileSpreadsheet },
+    { path: '/history', label: 'Histórico', icon: History },
   ];
 
   return (
-    <aside 
+    <aside
       className={cn(
-        "h-screen bg-card border-r border-border flex flex-col transition-all duration-300 ease-in-out relative z-10",
-        collapsed ? "w-20" : "w-64"
+        "h-screen bg-[hsl(var(--sidebar-background))] border-r border-[hsl(var(--sidebar-border))]",
+        "flex flex-col transition-all duration-300 ease-in-out relative z-10 shrink-0",
+        collapsed ? "w-[60px]" : "w-56"
       )}
     >
-      {/* Collapse Toggle Button */}
-      <div className="absolute -right-3 top-8 z-20">
-        <Button 
-          variant="outline" 
-          size="icon" 
-          className="h-6 w-6 rounded-full shadow-md bg-background border border-border hover:bg-muted transition-all hover:scale-110"
-          onClick={onToggleCollapse}
-        >
-          {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        </Button>
-      </div>
+      {/* Collapse toggle */}
+      <button
+        onClick={onToggleCollapse}
+        className={cn(
+          "absolute -right-3 top-7 z-20 w-6 h-6 rounded-full",
+          "bg-card border border-border shadow-sm",
+          "flex items-center justify-center",
+          "hover:bg-muted transition-colors duration-150",
+          "text-muted-foreground hover:text-foreground"
+        )}
+      >
+        {collapsed
+          ? <ChevronRight className="w-3.5 h-3.5" />
+          : <ChevronLeft className="w-3.5 h-3.5" />
+        }
+      </button>
 
-      {/* Logo Area */}
-      <div className="p-4 flex items-center justify-center border-b border-border/50 h-16">
-        <div className="flex items-center gap-3 w-full animate-fade-in">
-          <div className={cn(
-            "p-2 rounded-lg bg-primary/10 text-primary flex-shrink-0 transition-all duration-300",
-            collapsed && "p-2"
-          )}>
-            <FileText className={cn("w-6 h-6", collapsed ? "w-6 h-6" : "w-6 h-6")} />
-          </div>
-          {!collapsed && (
-            <div className="overflow-hidden whitespace-nowrap animate-slide-up">
-              <h1 className="text-sm font-bold tracking-tight flex items-center gap-1.5">
-                CT-e Extractor
-                <Sparkles className="w-3 h-3 text-amber" />
-              </h1>
-              <p className="text-[10px] text-muted-foreground font-mono">
-                v1.2.0
-              </p>
-            </div>
-          )}
+      {/* Logo */}
+      <div className={cn(
+        "flex items-center border-b border-[hsl(var(--sidebar-border))] h-14 shrink-0",
+        collapsed ? "justify-center px-0" : "px-4 gap-3"
+      )}>
+        <div className="w-8 h-8 rounded bg-primary/15 border border-primary/30 flex items-center justify-center shrink-0">
+          <FileText className="w-4 h-4 text-primary" />
         </div>
+        {!collapsed && (
+          <div className="overflow-hidden">
+            <p className="font-display font-700 text-sm leading-tight tracking-wide text-foreground">
+              CT-e Extractor
+            </p>
+            <p className="font-mono text-[10px] text-muted-foreground leading-none mt-0.5">
+              v1.3.0
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* Navigation Items */}
-      <div className="flex-1 py-4 flex flex-col gap-2 px-3">
+      {/* Nav label */}
+      {!collapsed && (
+        <div className="px-4 pt-5 pb-1.5">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/60">
+            Navegação
+          </span>
+        </div>
+      )}
+
+      {/* Nav items */}
+      <nav className={cn("flex-1 flex flex-col gap-1 py-2", collapsed ? "px-2" : "px-3")}>
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.path);
-          
+
           return (
-            <Button 
+            <button
               key={item.path}
-              variant={active ? "secondary" : "ghost"}
-              className={cn(
-                "w-full justify-start gap-3 relative overflow-hidden transition-all duration-200",
-                collapsed && "justify-center px-0",
-                !active && "hover:bg-muted/80 text-muted-foreground hover:text-foreground",
-                active && "bg-primary/10 text-primary"
-              )}
               onClick={() => navigate(item.path)}
+              title={collapsed ? item.label : undefined}
+              className={cn(
+                "flex items-center rounded transition-all duration-150 relative",
+                "text-sm font-medium",
+                collapsed ? "justify-center h-9 w-full" : "gap-3 px-3 h-9 w-full",
+                active
+                  ? "bg-primary/10 text-primary"
+                  : "text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-accent))] hover:text-foreground"
+              )}
             >
-              <Icon className={cn("w-5 h-5 flex-shrink-0", active ? "text-primary" : "text-muted-foreground")} />
-              {!collapsed && <span className="animate-slide-up">{item.label}</span>}
-              {active && !collapsed && (
-                <div className="absolute right-0 top-0 bottom-0 w-1 bg-primary rounded-l-full animate-scale-in" />
+              {active && (
+                <span className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-r bg-primary" />
               )}
-              {active && collapsed && (
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-full" />
-              )}
-            </Button>
+              <Icon className={cn("w-4 h-4 shrink-0", active ? "text-primary" : "text-muted-foreground")} />
+              {!collapsed && <span>{item.label}</span>}
+            </button>
           );
         })}
-      </div>
+      </nav>
 
-      {/* Footer Actions */}
-      <div className="p-4 border-t border-border/50 space-y-2">
-        <Button
-          variant="outline"
+      {/* Footer */}
+      <div className={cn(
+        "border-t border-[hsl(var(--sidebar-border))] py-3 shrink-0",
+        collapsed ? "px-2" : "px-3"
+      )}>
+        <button
           onClick={onToggleDarkMode}
-          className={cn(
-            "w-full gap-2 font-medium transition-all duration-200 hover:bg-muted",
-            collapsed ? "justify-center px-0" : "justify-start"
-          )}
           title={darkMode ? "Modo Claro" : "Modo Escuro"}
-        >
-          {darkMode ? (
-            <Sun className="w-5 h-5 text-amber" />
-          ) : (
-            <Moon className="w-5 h-5 text-primary" />
+          className={cn(
+            "flex items-center rounded transition-all duration-150 text-sm font-medium w-full",
+            "text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-accent))] hover:text-foreground",
+            collapsed ? "justify-center h-9" : "gap-3 px-3 h-9"
           )}
-          {!collapsed && <span className="animate-slide-up">{darkMode ? "Modo Claro" : "Modo Escuro"}</span>}
-        </Button>
-        
+        >
+          {darkMode
+            ? <Sun className="w-4 h-4 shrink-0 text-primary" />
+            : <Moon className="w-4 h-4 shrink-0 text-muted-foreground" />
+          }
+          {!collapsed && (
+            <span>{darkMode ? "Modo Claro" : "Modo Escuro"}</span>
+          )}
+        </button>
+
         {!collapsed && (
-          <div className="text-[10px] text-muted-foreground text-center pt-2 border-t border-border/30">
-            <p>CT-e Extractor v1.2.0</p>
-            <p className="mt-0.5 opacity-60">© 2024</p>
-          </div>
+          <p className="font-mono text-[10px] text-muted-foreground/50 text-center mt-3 pb-1">
+            © 2025 CT-e Extractor
+          </p>
         )}
       </div>
     </aside>
