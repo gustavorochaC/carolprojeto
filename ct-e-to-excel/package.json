@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "predeploy": "npm run build",
+    "predeploy": "vite build --outDir docs --base /ct-e-to-excel/",
     "deploy": "gh-pages -d docs",
     "dev": "vite",
     "build": "vite build",
