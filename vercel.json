@@ -1,0 +1,7 @@
+{
+  "buildCommand": "cd ct-e-to-excel && npm install && npm run build",
+  "outputDirectory": "ct-e-to-excel/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
